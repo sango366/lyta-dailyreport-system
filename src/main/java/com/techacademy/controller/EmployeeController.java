@@ -126,11 +126,11 @@ public class EmployeeController {
 
     /** 従業員更新処理 @PostMapping画面でもらってきたデータを受け取って処理をする*/
     @PostMapping("/{code}/update")
-    public String postEmployee(@Validated Employee employee, String code, BindingResult res, Model model) {
+    public String postEmployee(@PathVariable String code, @Validated Employee employee, BindingResult res, Model model) {
 
         if(res.hasErrors()) {
             model.addAttribute("employee", employee);
-            return update(code,model);
+            return update(null,model);
         }
 
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
@@ -140,13 +140,13 @@ public class EmployeeController {
 
             if (ErrorMessage.contains(result)) {
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return update(code,model);
+                return update(null,model);
             }
 
         } catch (DataIntegrityViolationException e) {
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            return update(code, model);
+            return update(null, model);
         }
 
         return "redirect:/employees";
