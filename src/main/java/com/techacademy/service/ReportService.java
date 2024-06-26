@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.techacademy.constants.ErrorKinds;
-import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
 import com.techacademy.repository.EmployeeRepository;
 import com.techacademy.repository.ReportRepository;
 
@@ -32,7 +32,16 @@ public class ReportService {
 
 
     // 日報一覧表示処理
-    public List<Employee> findAll() {
+    public List<Report> findAll() {
         return reportRepository.findAll();
+    }
+
+    // 1件を検索
+    public Report findByReport(Integer id) {
+        // findByIdで検索
+        Optional<Report> option = reportRepository.findById(id);
+        // 取得できなかった場合はnullを返す
+        Report report = option.orElse(null);
+        return report;
     }
 }
