@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="common/header :: head_fragment(title=日報詳細)"></head>
-
+<head th:replace="common/header :: head_fragment(title='日報詳細')"></head>
 <body class="h-100 overflow-hidden">
     <div class="row h-100">
         <div class="h-100 p-3 mb-2 bg-dark text-white col-sm-2">
@@ -15,21 +13,18 @@
             </div>
 
             <div class="mb-3 col-12 col-xxl-6">
-
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body mb-5">
-
                             <div class="wizard wizard-success mb-4">
-
                                 <table class="table table-striped">
                                     <tr>
                                         <th class="w-25">日付</th>
-                                        <td class="align-middle" th:text="${report.report_date}"></td>
+                                        <td class="align-middle" th:text="${report.reportDate}"></td>
                                     </tr>
                                     <tr>
                                         <th>氏名</th>
-                                        <td class="align-middle" th:text="${report.employee_code}"></td>
+                                        <td class="align-middle" th:text="${employee.name}"></td>
                                     </tr>
                                     <tr>
                                         <th>タイトル</th>
@@ -41,21 +36,21 @@
                                     </tr>
                                     <tr>
                                         <th>登録日時</th>
-                                        <td class="align-middle" th:text="${#temporals.format(report.created_at, 'yyyy-MM-dd hh:mm:ss')}"></td>
+                                        <td class="align-middle" th:text="${#temporals.format(report.createdAt, 'yyyy-MM-dd hh:mm:ss')}"></td>
                                     </tr>
                                     <tr>
                                         <th>更新日時</th>
-                                        <td class="align-middle" th:text="${#temporals.format(report.updated_at, 'yyyy-MM-dd hh:mm:ss')}"></td>
+                                        <td class="align-middle" th:text="${#temporals.format(report.updatedAt, 'yyyy-MM-dd hh:mm:ss')}"></td>
                                     </tr>
                                 </table>
                                 <div class="mt-5 row g-1">
                                     <div class="col-auto">
-                                        <form name="form" th:action="@{/reports/{id}/update(code=${report.id})}" th:method="get">
+                                        <form name="form" th:action="@{/reports/{id}/update(id=${report.id})}" th:method="get">
                                             <input type="submit" value="更新" class="btn btn-primary">
                                         </form>
                                     </div>
                                     <div class="col-auto">
-                                        <form name="form" th:action="@{/reports/{id}/delete(code=${report.id})}" th:method="post">
+                                        <form name="form" th:action="@{/reports/{id}/delete(id=${report.id})}" th:method="post">
                                             <input type="submit" value="削除" class="btn btn-primary">
                                         </form>
                                     </div>
@@ -63,16 +58,13 @@
                                         <a th:href="@{/reports}" class="btn btn-primary">戻る</a>
                                     </div>
                                 </div>
-                                <span th:if="${deleteError} neq null" th:text="${deleteError}" class="text-danger"></span>
+                                <span th:if="${deleteError} != null" th:text="${deleteError}" class="text-danger"></span>
                             </div>
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </body>
-
 </html>

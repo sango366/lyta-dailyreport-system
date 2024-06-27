@@ -72,4 +72,17 @@ public class ReportService {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         return userDetails.getUsername();
     }
+
+
+    // 従業員削除
+    @Transactional
+    public ErrorKinds delete(Integer id) {
+
+        Report report = findByReport(id);
+        LocalDateTime now = LocalDateTime.now();
+        report.setUpdatedAt(now);
+        report.setDeleteFlg(true);
+
+        return ErrorKinds.SUCCESS;
+    }
 }

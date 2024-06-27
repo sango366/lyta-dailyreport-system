@@ -109,12 +109,40 @@ public class ReportController {
         return "reports/list";
     }
 
-    // 従業員詳細画面
-    @GetMapping(value = "/{id}/")
+    // 日報詳細画面
+    @GetMapping(value = "/{id}")
     public String detail(@PathVariable Integer id, Model model) {
 
-        model.addAttribute("report", reportService.findByReport(id));
+        // IDを使ってReportを取得
+        Report report = reportService.findByReport(id);
+
+        // ReportからemployeeCodeを取得し、Employeeを取得
+        Employee employee = employeeService.findByCode(report.getEmployeeCode());
+
+        // ReportとEmployeeをモデルに追加
+        model.addAttribute("report", report);
+        model.addAttribute("employee", employee);
+
         return "reports/detail";
+
     }
+
+ // 日報削除処理
+    @PostMapping(value = "/{id}/delete")
+    public String delete(@PathVariable Integer id, Model model) {
+        // 削除処理を実行し、結果を取得
+        ErrorKinds result = reportService.delete(id);
+
+        if (ErrorMessage.contains(result)) {
+            // エラーメッセージが含まれている場合、エラーをモデルに追加し、詳細画面にリダイレクト
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            model.addAttribute("report", reportService.findByReport(id));
+            return detail(id, model);
+        }
+
+        // 成功した場合は一覧画面にリダイレクト
+        return "redirect:/reports";
+    }
+
 
 }

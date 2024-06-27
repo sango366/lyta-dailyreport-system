@@ -27,7 +27,6 @@ public class Report {
 
     // ID
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Integer id;
