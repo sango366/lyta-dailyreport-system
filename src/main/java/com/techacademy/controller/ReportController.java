@@ -144,11 +144,11 @@ public class ReportController {
         return "redirect:/reports";
     }
 
-    // 従業員更新画面
+    // 日報更新画面
     @GetMapping("/{id}/update")
     public String update(@PathVariable Integer id, Model model) {
         if(id == null) {
-            return "/reports/update";
+            return "reports/update";
         }
 
         // IDを使ってReportを取得
@@ -161,6 +161,24 @@ public class ReportController {
         model.addAttribute("employee", employee);
         // User更新画面に遷移
         return "reports/update";
+    }
+
+    /** 日報更新処理 @PostMapping画面でもらってきたデータを受け取って処理をする*/
+    @PostMapping("/{id}/update")
+    public String postEmployee(@PathVariable Integer id, @Validated Report report, BindingResult res, Model model) {
+        if(res.hasErrors()) {
+            model.addAttribute("report", report);
+            return update(null, model);
+        }
+
+        ErrorKinds result = reportService.renew(report, id);
+
+        if (ErrorMessage.contains(result)) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+            return update(null, model);
+        }
+
+        return "redirect:/reports";
     }
 
 

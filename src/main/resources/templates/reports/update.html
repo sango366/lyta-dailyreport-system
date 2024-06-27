@@ -23,7 +23,7 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="reportDate">日付</label>
                                         <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="is-invalid" id="reportDate">
-                                        <span th:if="${#fields.hasErrors('reportDate')}" th:errors="*{reportDate}" class="invalid-feedback"></span>
+                                        <span th:errors="*{reportDate}" class="text-danger"></span>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="name">氏名</label>
@@ -32,12 +32,12 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>
                                         <input class="form-control" type="text" th:field="*{title}" th:errorclass="is-invalid" id="title">
-                                        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback"></span>
+                                        <span th:errors="*{title}" class="text-danger"></span>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="content">内容</label>
                                         <textarea class="form-control" rows="5" th:field="*{content}" th:errorclass="is-invalid" id="content"></textarea>
-                                        <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="invalid-feedback"></span>
+                                        <span th:errors="*{content}" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <p class="mt-5">

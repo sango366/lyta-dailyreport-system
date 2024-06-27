@@ -85,4 +85,21 @@ public class ReportService {
 
         return ErrorKinds.SUCCESS;
     }
+
+    // 日報更新
+    @Transactional
+    public ErrorKinds renew(Report report, Integer id) {
+
+        Report report_tmp = findByReport(id);
+
+        report.setDeleteFlg(false);
+
+        LocalDateTime now = LocalDateTime.now();
+        report.setCreatedAt(report_tmp.getCreatedAt());
+        report.setEmployeeCode(report_tmp.getEmployeeCode());
+        report.setUpdatedAt(now);
+
+        reportRepository.save(report);
+        return ErrorKinds.SUCCESS;
+    }
 }
