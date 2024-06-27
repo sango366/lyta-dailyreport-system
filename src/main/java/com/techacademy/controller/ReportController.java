@@ -59,26 +59,26 @@ public class ReportController {
 
         // 入力チェック
         if (res.hasErrors()) {
-            return create(null, model);
+            return create(report, model); // 入力エラーがある場合、createメソッドにreportを渡して戻る
         }
 
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
-            ErrorKinds result = reportService.save(report);
+            ErrorKinds result = reportService.save(report); // レポートを保存
 
             if (ErrorMessage.contains(result)) {
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-                return create(null, model);
+                return create(report, model); // エラーがある場合、createメソッドにreportを渡して戻る
             }
 
         } catch (DataIntegrityViolationException e) {
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
-            return create(null, model);
+            return create(report, model); // エラーがある場合、createメソッドにreportを渡して戻る
         }
 
-        return "redirect:/reports";
+        return "redirect:/reports"; // 成功したらリダイレクト
     }
 
     // 日報一覧画面
