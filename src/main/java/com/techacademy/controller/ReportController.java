@@ -37,6 +37,50 @@ public class ReportController {
         this.employeeService = employeeService;
     }
 
+    // 日報新規登録画面
+    @GetMapping(value = "/add")
+    public String create(@ModelAttribute Report report, Model model) {
+        String employeeCode = reportService.getCurrentEmployeeCode();
+
+        report.setEmployeeCode(employeeCode); // ログインユーザーの社員番号をセット
+
+        Employee employee = employeeService.findByCode(employeeCode);
+        if (employee != null) {
+            model.addAttribute("employeeName", employee.getName());
+        }
+
+        model.addAttribute("report", report);
+        return "reports/new";
+    }
+
+ // 日報新規登録処理
+    @PostMapping(value = "/add")
+    public String add(@Validated Report report, BindingResult res, Model model) {
+
+        // 入力チェック
+        if (res.hasErrors()) {
+            return create(null, model);
+        }
+
+        // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
+        // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
+        try {
+            ErrorKinds result = reportService.save(report);
+
+            if (ErrorMessage.contains(result)) {
+                model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+                return create(null, model);
+            }
+
+        } catch (DataIntegrityViolationException e) {
+            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
+                    ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
+            return create(null, model);
+        }
+
+        return "redirect:/reports";
+    }
+
     // 日報一覧画面
     @GetMapping
     public String list(Model model) {
