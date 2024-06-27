@@ -1,7 +1,9 @@
 package com.techacademy.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -84,19 +86,25 @@ public class ReportController {
     // 日報一覧画面
     @GetMapping
     public String list(Model model) {
-
+        // 日報リストを取得
         List<Report> reportList = reportService.findAll();
 
-        List<Employee> employees = new ArrayList<>();
+        // 日報と従業員情報を紐づけたマップを用意
+        Map<Report, Employee> reportEmployeeMap = new HashMap<>();
 
         for (Report report : reportList) {
+            // 日報に関連する従業員を取得
             Employee employee = employeeService.findByCode(report.getEmployeeCode());
-            employees.add(employee);
+            // 日報と従業員情報をマップに追加
+            reportEmployeeMap.put(report, employee);
         }
 
-        model.addAttribute("listSize", reportList.size());
-        model.addAttribute("reportList", reportList);
-        model.addAttribute("employees", employees);
+        // マップのエントリセットをリストに変換
+        List<Map.Entry<Report, Employee>> reportEmployeeList = new ArrayList<>(reportEmployeeMap.entrySet());
+
+        // モデルにリストサイズ、日報と従業員のリストを追加
+        model.addAttribute("listSize", reportEmployeeList.size());
+        model.addAttribute("reportEmployeeList", reportEmployeeList);
 
         return "reports/list";
     }

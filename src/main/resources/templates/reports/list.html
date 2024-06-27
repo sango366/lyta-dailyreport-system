@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="common/header :: head_fragment(title=日報一覧)"></head>
-
+<head th:replace="common/header :: head_fragment(title='日報一覧')"></head>
 <body class="h-100 overflow-hidden">
     <div class="row h-100">
         <div class="h-100 p-3 mb-2 bg-dark text-white col-sm-2">
@@ -12,7 +10,6 @@
             <!-- コンテンツ -->
             <div class="container-fluid p-0">
                 <h1 class="h3 mb-3">日報 一覧</h1>
-
                 <div class="row">
                     <div class="col-xl-11">
                         <div class="card">
@@ -27,12 +24,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="report:${reportList}">
+                                        <tr th:each="entry : ${reportEmployeeList}">
                                             <!-- 社員番号から名前を取得 -->
-                                            <td class="align-middle" th:text="${report.employeeCode}"></td>
-                                            <td class="align-middle" th:text="${report.reportDate}"></td>
-                                            <td class="align-middle" th:text="${report.title}"></td>
-                                            <td class="align-middle"><a th:href="@{/reports/{id}(id=${report.id})}" class="btn btn-primary">詳細</a></td>
+                                            <td class="align-middle" th:text="${entry.value.name}"></td>
+                                            <td class="align-middle" th:text="${entry.key.reportDate}"></td>
+                                            <td class="align-middle" th:text="${entry.key.title}"></td>
+                                            <td class="align-middle"><a th:href="@{/reports/{id}(id=${entry.key.id})}" class="btn btn-primary">詳細</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -48,5 +45,4 @@
         </div>
     </div>
 </body>
-
 </html>
