@@ -144,5 +144,24 @@ public class ReportController {
         return "redirect:/reports";
     }
 
+    // 従業員更新画面
+    @GetMapping("/{id}/update")
+    public String update(@PathVariable Integer id, Model model) {
+        if(id == null) {
+            return "/reports/update";
+        }
+
+        // IDを使ってReportを取得
+        Report report = reportService.findByReport(id);
+
+        // ReportからemployeeCodeを取得し、Employeeを取得
+        Employee employee = employeeService.findByCode(report.getEmployeeCode());
+
+        model.addAttribute("report", reportService.findByReport(id));
+        model.addAttribute("employee", employee);
+        // User更新画面に遷移
+        return "reports/update";
+    }
+
 
 }

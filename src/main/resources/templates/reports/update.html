@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-
 <head th:replace="common/header :: head_fragment(title='日報 更新')"></head>
-
 <body class="h-100 overflow-hidden">
     <div class="row h-100">
         <div class="h-100 p-3 mb-2 bg-dark text-white col-sm-2">
@@ -19,42 +17,32 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="mb-3">
-                                <label class="form-label" for="code">日付</label>
-                                <p class="mb-1" th:text="*{employee.code}"></p>
-                            </div>
-                            <form th:action="@{/employees/{code}/update(code=${employee.code})}" th:object="${employee}" th:method="post">
-                                <input type="hidden" id="code" name="code" th:value="*{code}">
+                            <form th:action="@{/reports/{id}/update(id=${report.id})}" th:object="${report}" th:method="post">
+                                <input type="hidden" id="id" name="id" th:value="*{id}">
                                 <div class="wizard wizard-success mb-4">
                                     <div class="mb-3">
+                                        <label class="form-label" for="reportDate">日付</label>
+                                        <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="is-invalid" id="reportDate">
+                                        <span th:if="${#fields.hasErrors('reportDate')}" th:errors="*{reportDate}" class="invalid-feedback"></span>
+                                    </div>
+                                    <div class="mb-3">
                                         <label class="form-label" for="name">氏名</label>
-                                        <p class="mb-1"></p>
-                                        <div class="col-md-7">
-                                            <input class="form-control" type="text" th:field="*{name}" th:errorclass="err" id="name">
-                                            <span th:errors="*{name}" class="text-danger"></span>
-                                        </div>
+                                        <p class="mb-1" th:text="${employee.name}"></p>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label" for="password">タイトル</label>
-                                        <p class="mb-1"></p>
-                                        <div class="col-md-7">
-                                            <input class="form-control" type="password" th:field="*{password}" th:errorclass="err" id="password">
-                                            <span th:if="${passwordError} neq null" th:text="${passwordError}" class="text-danger"></span>
-                                        </div>
+                                        <label class="form-label" for="title">タイトル</label>
+                                        <input class="form-control" type="text" th:field="*{title}" th:errorclass="is-invalid" id="title">
+                                        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback"></span>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label" for="role">内容</label>
-                                        <p class="mb-1"></p>
-                                        <div class="col-md-4">
-                                            <select class="form-select" th:field="*{role}" id="role">
-                                                <option th:each="item:${T(com.techacademy.entity.Employee.Role).values()}" th:value="${item}" th:text="${item.getValue()}" th:selected="*{role} == ${item}"></option>
-                                            </select>
-                                        </div>
+                                        <label class="form-label" for="content">内容</label>
+                                        <textarea class="form-control" rows="5" th:field="*{content}" th:errorclass="is-invalid" id="content"></textarea>
+                                        <span th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="invalid-feedback"></span>
                                     </div>
                                 </div>
                                 <p class="mt-5">
                                     <input type="submit" value="更新" class="btn btn-primary">
-                                    <a th:href="@{/employees}" class="btn btn-primary">戻る</a>
+                                    <a th:href="@{/reports}" class="btn btn-primary">戻る</a>
                                 </p>
                             </form>
                         </div>
@@ -64,5 +52,4 @@
         </div>
     </div>
 </body>
-
 </html>
