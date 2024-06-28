@@ -19,6 +19,7 @@
                         <div class="card-body">
                             <form th:action="@{/reports/{id}/update(id=${report.id})}" th:object="${report}" th:method="post">
                                 <input type="hidden" id="id" name="id" th:value="*{id}">
+                                <input type="hidden" id="employeeCode" name="employeeCode" th:value="*{employeeCode}">
                                 <div class="wizard wizard-success mb-4">
                                     <div class="mb-3">
                                         <label class="form-label" for="reportDate">日付</label>

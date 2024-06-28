@@ -146,36 +146,41 @@ public class ReportController {
 
     // 日報更新画面
     @GetMapping("/{id}/update")
-    public String update(@PathVariable Integer id, Model model) {
-        if(id == null) {
-            return "reports/update";
-        }
+    public String update(@PathVariable Integer id, Model model, Report report) {
+        if(id == null){
+            // バリデーションチェックに引っかかった場合は、idがnull。postMappingから遷移
+            Employee employee = employeeService.findByCode(report.getEmployeeCode());
+            //postMappingのメソッドから持ってきたreportインスタンスをそのままセット
+            model.addAttribute("report", report);
+            model.addAttribute("employee", employee);
 
-        // IDを使ってReportを取得
-        Report report = reportService.findByReport(id);
+          }else{
+            // idがnull以外⇒詳細画面から遷移。idを使ってReportを取得
+              report = reportService.findByReport(id);
 
-        // ReportからemployeeCodeを取得し、Employeeを取得
-        Employee employee = employeeService.findByCode(report.getEmployeeCode());
+              // ReportからemployeeCodeを取得し、Employeeを取得
+              Employee employee = employeeService.findByCode(report.getEmployeeCode());
 
-        model.addAttribute("report", reportService.findByReport(id));
-        model.addAttribute("employee", employee);
+              model.addAttribute("report", reportService.findByReport(id));
+              model.addAttribute("employee", employee);
+          }
         // User更新画面に遷移
         return "reports/update";
     }
 
     /** 日報更新処理 @PostMapping画面でもらってきたデータを受け取って処理をする*/
     @PostMapping("/{id}/update")
-    public String postEmployee(@PathVariable Integer id, @Validated Report report, BindingResult res, Model model) {
+    public String postReport(@PathVariable Integer id, @Validated Report report, BindingResult res, Model model) {
         if(res.hasErrors()) {
             model.addAttribute("report", report);
-            return update(null, model);
+            return update(null, model, report);
         }
 
         ErrorKinds result = reportService.renew(report, id);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-            return update(null, model);
+            return update(null, model, report);
         }
 
         return "redirect:/reports";
