@@ -1,5 +1,7 @@
 package com.techacademy.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +19,9 @@ import com.techacademy.constants.ErrorKinds;
 import com.techacademy.constants.ErrorMessage;
 
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Report;
 import com.techacademy.service.EmployeeService;
+import com.techacademy.service.ReportService;
 import com.techacademy.service.UserDetail;
 
 @Controller
@@ -30,6 +34,9 @@ public class EmployeeController {
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
     }
+
+    @Autowired
+    private ReportService reportService;
 
     // 従業員一覧画面
     @GetMapping
@@ -108,6 +115,15 @@ public class EmployeeController {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
             return detail(code, model);
+        }
+
+        // 削除対象の従業員（employee）に紐づいている、日報のリスト（reportList）を取得
+        List<Report> reportList = reportService.findByEmployeeCode(code);
+
+        // 日報のリスト（reportList）を拡張for文を使って繰り返し
+        for (Report report : reportList) {
+            // 日報（report）のIDを指定して、日報情報を削除
+            reportService.delete(report.getId());
         }
 
         return "redirect:/employees";

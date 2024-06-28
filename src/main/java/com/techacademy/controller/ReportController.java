@@ -86,8 +86,23 @@ public class ReportController {
     // 日報一覧画面
     @GetMapping
     public String list(Model model) {
-        // 日報リストを取得
-        List<Report> reportList = reportService.findAll();
+
+        String employeeCode = reportService.getCurrentEmployeeCode();
+        // ログインユーザーの社員番号をセット
+        Employee currentUser = employeeService.findByCode(employeeCode);
+
+        // 日報リストを宣言
+        List<Report> reportList;
+
+        // ログインユーザーが一般ユーザーの場合、自分の日報のみを取得
+        if (currentUser.getRole() == Employee.Role.GENERAL) {
+            //repositoryで定義しているので、以下のようなクエリが発行される
+            //SELECT * FROM reports WHERE employee_code = ? 結果これだけで希望のデータが取れる
+            reportList = reportService.findByEmployeeCode(currentUser.getCode());
+        } else {
+            // 管理者の場合は全ての日報を取得
+            reportList = reportService.findAll();
+        }
 
         // 日報と従業員情報を紐づけたマップを用意
         Map<Report, Employee> reportEmployeeMap = new HashMap<>();

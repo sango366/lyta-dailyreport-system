@@ -73,6 +73,10 @@ public class ReportService {
         return userDetails.getUsername();
     }
 
+    //日報の従業員を取得
+    public List<Report> findByEmployeeCode(String employeeCode) {
+        return reportRepository.findByEmployeeCode(employeeCode);
+    }
 
     // 従業員削除
     @Transactional
@@ -102,4 +106,5 @@ public class ReportService {
         reportRepository.save(report);
         return ErrorKinds.SUCCESS;
     }
+
 }
