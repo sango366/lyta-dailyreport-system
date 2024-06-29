@@ -1,5 +1,6 @@
 package com.techacademy.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +38,15 @@ public class ReportService {
 //        this.passwordEncoder = passwordEncoder;
     }
 
+    //同じユーザーで同一日に日報がないかチェック
+    public boolean existsByEmployeeCodeAndReportDate(String employeeCode, LocalDate reportDate) {
+        return reportRepository.existsByEmployeeCodeAndReportDate(employeeCode, reportDate);
+    }
+
+    //同じユーザーで同一日に他の日報がないかチェック
+    public List<Report> findByEmployeeCodeAndReportDateAndId(String employeeCode, LocalDate reportDate, Integer id) {
+        return reportRepository.findByEmployeeCodeAndReportDateAndIdNot(employeeCode, reportDate, id);
+    }
 
     // 日報一覧表示処理
     public List<Report> findAll() {

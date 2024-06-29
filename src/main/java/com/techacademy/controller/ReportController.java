@@ -25,6 +25,7 @@ import com.techacademy.entity.Report;
 import com.techacademy.service.ReportService;
 import com.techacademy.service.EmployeeService;
 import com.techacademy.service.UserDetail;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Controller
 @RequestMapping("reports")
@@ -62,6 +63,18 @@ public class ReportController {
         // 入力チェック
         if (res.hasErrors()) {
             return create(report, model); // 入力エラーがある場合、createメソッドにreportを渡して戻る
+        }
+
+        // 現在のログインユーザーを取得
+        String currentUser = reportService.getCurrentEmployeeCode();
+
+        // 指定された日付と現在のログインユーザーの日報データが存在するか確認
+        boolean reportExists = reportService.existsByEmployeeCodeAndReportDate(currentUser, report.getReportDate());
+
+        //Trueだった場合
+        if (reportExists) {
+            model.addAttribute("errorMessage", "既に登録されている日付です。");
+            return create(report, model); // エラーメッセージを設定して戻る
         }
 
         // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
@@ -186,10 +199,24 @@ public class ReportController {
     /** 日報更新処理 @PostMapping画面でもらってきたデータを受け取って処理をする*/
     @PostMapping("/{id}/update")
     public String postReport(@PathVariable Integer id, @Validated Report report, BindingResult res, Model model) {
+
+        // 現在のログインユーザーを取得
+        String currentUser = reportService.getCurrentEmployeeCode();
+
         if(res.hasErrors()) {
             model.addAttribute("report", report);
             return update(null, model, report);
         }
+
+        // 現在のログインユーザー以外の日報データで、指定ID以外の日付の重複をチェック Notをつけると除外される
+        List<Report> otherReports = reportService.findByEmployeeCodeAndReportDateAndId(currentUser, report.getReportDate(), id);
+
+        // 他の日報データで同じ日付が存在する場合
+        if (!otherReports.isEmpty()) {
+            model.addAttribute("errorMessage", "既に登録されている日付です。");
+            return update(null, model, report); // エラーメッセージを設定して更新画面に戻る
+        }
+
 
         ErrorKinds result = reportService.renew(report, id);
 

@@ -25,6 +25,7 @@
                                         <label class="form-label" for="reportDate">日付</label>
                                         <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="is-invalid" id="reportDate">
                                         <span th:errors="*{reportDate}" class="text-danger"></span>
+                                        <span th:if="${errorMessage}" th:text="${errorMessage}" class="text-danger"></span>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label" for="name">氏名</label>
